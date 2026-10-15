@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0F0F12;
+  --color-surface: #16161e;
+  --color-surface-2: #1e1e2a;
+  --color-border: #26263a;
+  --color-border-subtle: #1f1f30;
+  --color-accent: #6c63ff;
+  --color-accent-hover: #7c74ff;
+  --color-accent-glow: rgba(108, 99, 255, 0.15);
+  --color-text: #e8e8f0;
+  --color-text-muted: #6b6b86;
+  --color-danger: #ef4444;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background-color: var(--color-bg);
+}
+
+/* ── Root shell ── */
+#root {
+  width: 100%;
+  min-height: 100dvh;
+  background-color: #09090b;
+}
+
+/* Safe area for notch / island */
+.safe-top {
+  padding-top: max(20px, env(safe-area-inset-top));
+}
+.safe-bottom {
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+
+/* ── Buttons ── */
+button {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+}
+
+/* ── Focus rings ── */
+input:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ── Custom animations ── */
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes accordion-open {
+  from { opacity: 0; max-height: 0; }
+  to   { opacity: 1; max-height: 1200px; }
+}
+
+.anim-slide-up {
+  animation: slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.anim-fade-in {
+  animation: fade-in 0.25s ease both;
+}
+.anim-accordion {
+  animation: accordion-open 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Number inputs — remove spinners ── */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}

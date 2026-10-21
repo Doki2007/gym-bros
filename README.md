@@ -1,8 +1,8 @@
 
 # 🏋️ Gym Bros
 
-**Tu registro de entrenamientos, mobile-first.**  
-Registra sesiones, pesos y series. Comparte el progreso con tus gym bros.
+**Your workout tracker, mobile-first.**  
+Log sessions, weights and sets. Share your progress with your gym bros.
 
 [![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-8-646cff?style=flat-square&logo=vite)](https://vitejs.dev)
@@ -10,79 +10,80 @@ Registra sesiones, pesos y series. Comparte el progreso con tus gym bros.
 [![Supabase](https://img.shields.io/badge/Supabase-BaaS-3ecf8e?style=flat-square&logo=supabase)](https://supabase.com)
 [![License](https://img.shields.io/badge/License-MIT-white?style=flat-square)](LICENSE)
 
+> 🌐 [Versión en Español](README.es.md)
 
 ---
 
 ## ✨ Features
 
-- 🔐 **Auth sin contraseña** — Magic link via Supabase Auth
-- 📋 **Gestión de sesiones** — Crea, visualiza y elimina sesiones de entrenamiento por tipo de split (Push / Pull / Legs / Upper / Full Body)
-- 💪 **Registro de ejercicios** — Agrega ejercicios a cada sesión, edita su nombre y elimínalos con confirmación inline
-- 📊 **Series detalladas** — Registra aproximaciones y series efectivas con peso (kg) y repeticiones por ejercicio
-- 🗂️ **Historial completo** — Panel principal con resumen de sesiones, racha y último split
-- 🔔 **Toast notifications** — Feedback visual inmediato en cada acción (crear, eliminar, error)
-- 📱 **Mobile-first design** — UI premium con tema dark, glassmorphism y micro-animaciones. En desktop se muestra como phone frame.
-- ⚡ **PWA ready** — Manifest configurado para "Añadir a pantalla de inicio"
+- 🔐 **Passwordless auth** — Magic link via Supabase Auth
+- 📋 **Session management** — Create, view and delete workout sessions by split type (Push / Pull / Legs / Upper / Full Body)
+- 💪 **Exercise tracking** — Add exercises to each session, rename them and delete with inline confirmation
+- 📊 **Detailed sets** — Log warm-up and working sets with weight (kg) and reps per exercise
+- 🗂️ **Full history** — Dashboard with session summary, streak and last split
+- 🔔 **Toast notifications** — Instant visual feedback on every action (create, delete, error)
+- 📱 **Mobile-first design** — Premium dark UI with glassmorphism and micro-animations. Shows as a phone frame on desktop.
+- ⚡ **PWA ready** — Manifest configured for "Add to home screen"
 
 ---
 
 ## 🖼️ Screenshots
 
-> *Coming soon — la app corre en modo dark premium con fondo `#09090b` y acento índigo `#6366f1`.*
+> *Coming soon — the app runs in premium dark mode with `#09090b` background and indigo `#6366f1` accent.*
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Capa | Tecnología |
-|------|-----------|
-| Framework UI | React 19 + Vite 8 |
-| Estilos | TailwindCSS v4 (vanilla, sin Tailwind plugins) |
+| Layer | Technology |
+|-------|-----------|
+| UI Framework | React 19 + Vite 8 |
+| Styles | TailwindCSS v4 (vanilla, no plugins) |
 | Backend / DB | Supabase (PostgreSQL + Auth + Realtime) |
-| Iconos | Lucide React |
-| Tipografía | Plus Jakarta Sans (Google Fonts) |
+| Icons | Lucide React |
+| Typography | Plus Jakarta Sans (Google Fonts) |
 | Package manager | pnpm |
 
 ---
 
 ## 🚀 Getting Started
 
-### Pre-requisitos
+### Prerequisites
 
 - Node.js ≥ 18
-- [pnpm](https://pnpm.io/installation) instalado globalmente
-- Una cuenta en [Supabase](https://supabase.com) con un proyecto creado
+- [pnpm](https://pnpm.io/installation) installed globally
+- A [Supabase](https://supabase.com) account with a project created
 
-### 1. Clonar el repositorio
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/tu-usuario/gym-bros.git
+git clone https://github.com/Doki2007/gym-bros.git
 cd gym-bros
 ```
 
-### 2. Instalar dependencias
+### 2. Install dependencies
 
 ```bash
 pnpm install
 ```
 
-### 3. Configurar variables de entorno
+### 3. Set up environment variables
 
-Crea un archivo `.env.local` en la raíz del proyecto:
+Create a `.env.local` file at the project root:
 
 ```env
 VITE_SUPABASE_URL=https://xxxx.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-Puedes encontrar estos valores en **Supabase → Settings → API**.
+You can find these values in **Supabase → Settings → API**.
 
-### 4. Configurar la base de datos
+### 4. Set up the database
 
-Ejecuta el siguiente SQL en el editor de Supabase (**SQL Editor → New query**):
+Run the following SQL in the Supabase editor (**SQL Editor → New query**):
 
 ```sql
--- Sesiones de entrenamiento
+-- Workout sessions
 create table sesiones (
   id uuid primary key default gen_random_uuid(),
   usuario_id uuid references auth.users(id) on delete cascade not null,
@@ -90,7 +91,7 @@ create table sesiones (
   fecha timestamptz default now() not null
 );
 
--- Ejercicios dentro de una sesión
+-- Exercises within a session
 create table sesion_ejercicios (
   id uuid primary key default gen_random_uuid(),
   sesion_id uuid references sesiones(id) on delete cascade not null,
@@ -98,7 +99,7 @@ create table sesion_ejercicios (
   orden int default 1
 );
 
--- Series (aproximaciones + efectivas)
+-- Sets (warm-up + working)
 create table series (
   id uuid primary key default gen_random_uuid(),
   ejercicio_id uuid references sesion_ejercicios(id) on delete cascade not null,
@@ -113,15 +114,15 @@ alter table sesiones enable row level security;
 alter table sesion_ejercicios enable row level security;
 alter table series enable row level security;
 
-create policy "Usuarios ven sus propias sesiones" on sesiones
+create policy "Users see their own sessions" on sesiones
   for all using (auth.uid() = usuario_id);
 
-create policy "Acceso a ejercicios de sus sesiones" on sesion_ejercicios
+create policy "Access to exercises of their sessions" on sesion_ejercicios
   for all using (
     sesion_id in (select id from sesiones where usuario_id = auth.uid())
   );
 
-create policy "Acceso a series de sus ejercicios" on series
+create policy "Access to sets of their exercises" on series
   for all using (
     ejercicio_id in (
       select se.id from sesion_ejercicios se
@@ -131,17 +132,17 @@ create policy "Acceso a series de sus ejercicios" on series
   );
 ```
 
-### 5. Levantar el servidor de desarrollo
+### 5. Start the development server
 
 ```bash
 pnpm dev
 ```
 
-La app estará disponible en `http://localhost:5173`.
+The app will be available at `http://localhost:5173`.
 
 ---
 
-## 📁 Estructura del proyecto
+## 📁 Project structure
 
 ```
 gym-bros/
@@ -150,74 +151,74 @@ gym-bros/
 │   └── manifest.json          # PWA manifest
 ├── src/
 │   ├── components/
-│   │   ├── BottomNav.jsx       # Navegación inferior estilo píldora
-│   │   ├── ErrorCard.jsx       # Componente de error reutilizable
-│   │   ├── ExerciseAccordion.jsx # Acordeón de ejercicios + series
-│   │   └── ToastContainer.jsx  # Sistema de notificaciones
+│   │   ├── BottomNav.jsx       # Floating pill bottom navigation
+│   │   ├── ErrorCard.jsx       # Reusable error component
+│   │   ├── ExerciseAccordion.jsx # Exercise + sets accordion
+│   │   └── ToastContainer.jsx  # Toast notification system
 │   ├── contexts/
-│   │   └── ToastContext.jsx    # Context + hook useToast()
+│   │   └── ToastContext.jsx    # Context + useToast() hook
 │   ├── lib/
-│   │   └── supabase.js         # Cliente Supabase configurado
+│   │   └── supabase.js         # Configured Supabase client
 │   ├── pages/
-│   │   ├── HistorialPage.jsx   # Dashboard principal
-│   │   ├── LoginPage.jsx       # Pantalla de auth
-│   │   ├── ProfilePage.jsx     # Perfil + logout
-│   │   └── SesionPage.jsx      # Vista de sesión activa
-│   ├── App.jsx                 # Router y shell principal
-│   ├── index.css               # Tokens de diseño + clases utilitarias
+│   │   ├── HistorialPage.jsx   # Main dashboard
+│   │   ├── LoginPage.jsx       # Auth screen
+│   │   ├── ProfilePage.jsx     # Profile + logout
+│   │   └── SesionPage.jsx      # Active session view
+│   ├── App.jsx                 # Router and main shell
+│   ├── index.css               # Design tokens + utility classes
 │   └── main.jsx
-├── references/                 # Referencias de diseño (no se incluyen en build)
+├── references/                 # Design references (not included in build)
 ├── index.html
 ├── package.json
-└── AGENTS.md                   # Protocolo para el agente de IA
+└── AGENTS.md                   # AI agent protocol
 ```
 
 ---
 
-## 🧩 Scripts disponibles
+## 🧩 Available scripts
 
 ```bash
-pnpm dev        # Servidor de desarrollo con HMR
-pnpm build      # Build de producción (también sirve como smoke test)
-pnpm preview    # Preview del build de producción
-pnpm lint       # Linter con oxlint
+pnpm dev        # Development server with HMR
+pnpm build      # Production build (also acts as smoke test)
+pnpm preview    # Preview the production build
+pnpm lint       # Lint with oxlint
 ```
 
 ---
 
 ## 🗺️ Roadmap
 
-- [x] Auth con magic link
-- [x] CRUD de sesiones (crear, leer, eliminar)
-- [x] CRUD de ejercicios (crear, editar nombre, eliminar)
-- [x] Registro de series con peso y reps
-- [x] Sistema de toasts / feedback visual
-- [x] Error handling con reintentar
+- [x] Magic link auth
+- [x] Session CRUD (create, read, delete)
+- [x] Exercise CRUD (create, rename, delete)
+- [x] Set logging with weight and reps
+- [x] Toast / visual feedback system
+- [x] Error handling with retry
 - [x] PWA manifest
 - [ ] OAuth (Google / GitHub)
-- [ ] Racha real de días consecutivos
-- [ ] Paginación semanal (7 sesiones por página)
-- [ ] Editar split de una sesión existente
-- [ ] Sistema de amigos y sesiones públicas/privadas
+- [ ] Real consecutive-day streak
+- [ ] Weekly pagination (7 sessions per page)
+- [ ] Edit split of an existing session
+- [ ] Friends system with public/private sessions
 
 ---
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-Las PRs son bienvenidas. Para cambios importantes, abre un issue primero para discutir qué te gustaría cambiar.
+PRs are welcome. For major changes, please open an issue first to discuss what you'd like to change.
 
-1. Fork el proyecto
-2. Crea tu rama (`git checkout -b feature/nueva-feature`)
-3. Commit tus cambios (`git commit -m 'feat: agrega nueva feature'`)
-4. Push a la rama (`git push origin feature/nueva-feature`)
-5. Abre un Pull Request
+1. Fork the project
+2. Create your branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'feat: add your feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
 
 ---
 
-## 📄 Licencia
+## 📄 License
 
 MIT © [Jamir](https://github.com/Doki2007)
 
 ---
 
-*Hecho con 💪 y demasiado café.*
+*Built with 💪 and way too much coffee.*

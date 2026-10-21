@@ -1,25 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0F0F12;
-  --color-surface: #16161e;
-  --color-surface-2: #1e1e2a;
-  --color-border: #26263a;
-  --color-border-subtle: #1f1f30;
-  --color-accent: #6c63ff;
-  --color-accent-hover: #7c74ff;
-  --color-accent-glow: rgba(108, 99, 255, 0.15);
-  --color-text: #e8e8f0;
-  --color-text-muted: #6b6b86;
+  --color-bg: #09090b;
+  --color-surface: #121217;
+  --color-surface-2: #1a1a23;
+  --color-surface-card: #14141a;
+  --color-border: #262633;
+  --color-border-subtle: #1c1c24;
+  --color-accent: #6366f1;
+  --color-accent-hover: #4f46e5;
+  --color-accent-glow: rgba(99, 102, 241, 0.15);
+  --color-text: #f4f4f5;
+  --color-text-muted: #71717a;
   --color-danger: #ef4444;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
+@layer base {
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 html {
@@ -35,27 +36,57 @@ body {
   min-height: 100dvh;
   overflow-x: hidden;
   background-color: var(--color-bg);
+  overscroll-behavior-y: none;
+  font-family: var(--font-sans);
 }
 
 /* ── Root shell ── */
 #root {
   width: 100%;
   min-height: 100dvh;
-  background-color: #09090b;
+  background-color: var(--color-bg);
+  display: flex;
+  justify-content: center;
+}
+
+/* ── Referencias y Estilos NutriStudio adaptados ── */
+.soft-card {
+  background: #14141a;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.soft-card-interactive {
+  background: #14141a;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.soft-card-interactive:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  background: #181820;
+}
+.soft-card-interactive:active {
+  transform: scale(0.985);
+}
+
+.floating-pill-shadow {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
 /* Safe area for notch / island */
 .safe-top {
-  padding-top: max(20px, env(safe-area-inset-top));
+  padding-top: max(16px, env(safe-area-inset-top));
 }
 .safe-bottom {
   padding-bottom: max(16px, env(safe-area-inset-bottom));
 }
 
 /* ── Scrollbar ── */
-::-webkit-scrollbar { width: 2px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+.custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+.custom-scroll::-webkit-scrollbar-thumb { background: #27272a; border-radius: 999px; }
 
 /* ── Buttons ── */
 button {
